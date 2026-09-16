@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CPIS Portal — TTE Pakistan</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1B3A6B;--teal:#0D7377;--mint:#E8F5F5;--sky:#EBF4FF;
+  --green:#1E7D34;--green-bg:#E8F5EB;--green-br:#B8DFBF;
+  --amber:#A05C00;--amber-bg:#FFF3DC;--amber-br:#F5C97A;
+  --red:#A01E1E;--red-bg:#FFE8E8;--red-br:#F5ABAB;
+  --blue:#1F6FEB;--blue-bg:#EBF2FF;
+  --purple:#7C3AED;--purple-bg:#F3EFFE;
+  --text:#1A1A2E;--text2:#555577;--text3:#8B8BAA;
+  --border:#CBD5E1;--border2:#E2E8F0;
+  --bg:#F0F4F8;--surface:#FFFFFF;--surface2:#F8FAFB;
+  --radius:10px;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+.page{display:none}.page.active{display:flex}
+.center{align-items:center;justify-content:center;min-height:100vh;padding:1rem}
+.card{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:2.5rem;width:100%;max-width:440px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.logo{width:54px;height:54px;border-radius:14px;background:var(--navy);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem}
+h1{font-size:20px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:4px}
+.sub{font-size:13px;color:var(--text2);text-align:center;margin-bottom:1.5rem;line-height:1.5}
+.tabs{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:3px;margin-bottom:1.25rem}
+.tab{flex:1;padding:8px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text2);text-align:center}
+.tab.on{background:var(--surface);color:var(--navy);font-weight:700;border:1px solid var(--border2)}
+.panel{display:none}.panel.on{display:block}
+.green-box{background:var(--green-bg);border:1px solid var(--green-br);border-radius:var(--radius);padding:1rem;text-align:center;margin-bottom:.75rem}
+.btn{width:100%;padding:12px;font-size:14px;font-weight:600;border-radius:var(--radius);border:none;color:#fff;cursor:pointer;margin-bottom:.5rem}
+.btn-navy{background:var(--navy)}.btn-navy:hover{opacity:.9}
+.btn-navy:disabled{opacity:.6;cursor:not-allowed}
+.btn2{width:100%;padding:10px;font-size:13px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer}
+.msg{font-size:12px;color:var(--text2);text-align:center;margin-top:6px;min-height:18px}
+.demo-box{background:var(--surface2);border-radius:8px;padding:.85rem;margin-bottom:.75rem;font-size:12px;color:var(--text2)}
+.demo-box strong{display:block;margin-bottom:6px;color:var(--text)}
+code{background:var(--blue-bg);color:var(--blue);padding:1px 6px;border-radius:4px;font-family:monospace}
+.fl{font-size:11px;font-weight:700;color:var(--text3);text-align:left;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+input.fi{width:100%;padding:12px 16px;font-size:14px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--surface2);color:var(--text);margin-bottom:12px;outline:none}
+input.fi:focus{border-color:var(--blue)}
+.pw-wrap{position:relative;margin-bottom:16px}
+.pw-wrap input{margin-bottom:0;padding-right:44px}
+.pw-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3);background:none;border:none;font-size:18px}
+.err-box{font-size:12px;color:var(--red);padding:7px 12px;border-radius:7px;background:var(--red-bg);border:1px solid var(--red-br);display:none;margin-bottom:8px}
+.hint{font-size:11px;color:var(--text3);text-align:center;margin-top:12px;line-height:1.5}
+.back{font-size:12px;color:var(--text3);cursor:pointer;display:inline-block;margin-top:8px}
+.back:hover{color:var(--blue)}
+.dash{display:none;min-height:100vh}
+.wrap{max-width:980px;margin:0 auto;padding:1.5rem 1rem}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border2);flex-wrap:wrap;gap:10px}
+.uinfo{display:flex;align-items:center;gap:12px}
+.ava{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.ava-e{background:var(--blue-bg);color:var(--blue)}
+.ava-m{background:var(--green-bg);color:var(--green)}
+.ava-h{background:var(--purple-bg);color:var(--purple)}
+.uname{font-size:15px;font-weight:600}
+.umeta{font-size:12px;color:var(--text2);margin-top:2px}
+.rtag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;text-transform:uppercase}
+.rtag-e{background:var(--blue-bg);color:var(--blue)}
+.rtag-m{background:var(--green-bg);color:var(--green)}
+.rtag-h{background:var(--purple-bg);color:var(--purple)}
+.lo{font-size:12px;color:var(--text2);cursor:pointer;background:none;border:1px solid var(--border);border-radius:7px;padding:6px 14px;display:flex;align-items:center;gap:5px}
+.lo:hover{border-color:var(--red);color:var(--red)}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.25rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.kc{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:.9rem 1.1rem;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.kl{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.kv{font-size:26px;font-weight:700;line-height:1}
+.ks{font-size:11px;color:var(--text3);margin-top:4px}
+.sb{border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:10px;border:1px solid;font-size:13px;line-height:1.5}
+.sb-g{background:var(--green-bg);border-color:var(--green-br)}
+.sb-a{background:var(--amber-bg);border-color:var(--amber-br)}
+.sb-r{background:var(--red-bg);border-color:var(--red-br)}
+.bdg{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
+.bg{background:var(--green-bg);color:var(--green);border-color:var(--green-br)}
+.ba{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-br)}
+.br{background:var(--red-bg);color:var(--red);border-color:var(--red-br)}
+.bb{background:var(--blue-bg);color:var(--blue);border-color:#B8D4F5}
+.bp{background:var(--purple-bg);color:var(--purple);border-color:#C4A8F5}
+.bx{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:.9rem 1.1rem;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:1.25rem}
+.bxt{font-size:13px;font-weight:600;margin-bottom:6px}
+.bxp{font-size:13px;color:var(--text2);line-height:1.6}
+.st{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.br-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border2)}
+.br-row:last-child{border-bottom:none}
+.brl{font-size:13px;display:flex;align-items:center;gap:7px}
+.brl i{color:var(--text3);font-size:16px}
+.brr{display:flex;align-items:center;gap:8px}
+.brs{font-size:13px;font-weight:600;min-width:52px;text-align:right}
+.brb{width:72px;height:5px;background:var(--border2);border-radius:3px;overflow:hidden}
+.brf{height:100%;border-radius:3px}
+.brt{display:flex;justify-content:space-between;align-items:center;padding-top:9px;margin-top:4px;border-top:1.5px solid var(--border)}
+.mhr{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border2)}
+.mhr:last-child{border-bottom:none}
+.mhm{font-size:12px;color:var(--text2);min-width:28px;font-weight:500}
+.mhb{flex:1;height:7px;background:var(--border2);border-radius:4px;overflow:hidden}
+.mhf{height:100%;border-radius:4px}
+.mhs{font-size:12px;font-weight:600;min-width:28px;text-align:right}
+.mhw{font-size:11px;font-weight:500;min-width:65px;text-align:right}
+.mha{display:flex;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)}
+.tw{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:700;color:var(--text3);text-align:left;padding:9px 12px;border-bottom:1px solid var(--border2);background:var(--surface2);text-transform:uppercase;letter-spacing:.04em}
+td{font-size:13px;padding:10px 12px;border-bottom:1px solid var(--border2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--sky)}
+.sb2{height:5px;border-radius:3px;background:var(--border2);overflow:hidden;width:55px;display:inline-block;vertical-align:middle;margin-left:6px}
+.sf{height:100%;border-radius:3px}
+.htabs{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:3px;margin-bottom:1.25rem;overflow-x:auto}
+.htab{padding:7px 14px;border-radius:7px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--text2);font-weight:500;white-space:nowrap}
+.htab.on{background:var(--surface);color:var(--navy);font-weight:700;border:1px solid var(--border2)}
+.hpanel{display:none}.hpanel.on{display:block}
+.al{background:var(--amber-bg);border:1px solid var(--amber-br);border-radius:var(--radius);padding:.85rem 1rem;margin-bottom:1.25rem;font-size:13px;line-height:1.5;display:flex;gap:8px;color:var(--amber)}
+.dg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.dc{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:.9rem 1rem;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.dn{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.dd{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.dot{width:11px;height:11px;border-radius:50%}
+.dstat{font-size:11px;color:var(--text2)}
+.fr{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.fr select,.fr input{font-size:13px;padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);outline:none}
+hr.div{border:none;border-top:1px solid var(--border2);margin:1.25rem 0}
+@media(max-width:640px){.g4{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}.dg{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="pg-setup" class="page center active">
+  <div class="card">
+    <div class="logo"><i class="ti ti-chart-line" style="font-size:26px;color:#fff"></i></div>
+    <h1>CPIS Portal</h1>
+    <div class="sub">TTE Pakistan · Continuous Performance Intelligence System</div>
+    <div class="tabs">
+      <button class="tab on" onclick="swTab('live',this)">Live data</button>
+      <button class="tab" onclick="swTab('demo',this)">Demo mode</button>
+    </div>
+    <div class="panel on" id="p-live">
+      <div class="green-box">
+        <i class="ti ti-circle-check" style="font-size:20px;color:var(--green);display:block;margin-bottom:4px"></i>
+        <div style="font-size:13px;font-weight:600;color:var(--green)">Connected to TTE CPIS Google Sheets</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px">HR updates Google Sheets → portal updates for everyone</div>
+      </div>
+      <button class="btn btn-navy" id="loadBtn" onclick="loadLive()">Load live data &amp; continue</button>
+      <div class="msg" id="loadMsg"></div>
+    </div>
+    <div class="panel" id="p-demo">
+      <div class="demo-box">
+        <strong>Demo credentials:</strong>
+        Employee: <code>007650</code> / <code>Muhammad2020@TTE</code><br><br>
+        Manager: <code>MGR001</code> / <code>Nadir2025@TTE</code><br><br>
+        HR: <code>HR001</code> / <code>HR2020@TTE</code>
+      </div>
+      <button class="btn btn-navy" onclick="loadDemo()">Launch demo</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="pg-login" class="page center">
+  <div class="card">
+    <div class="logo"><i class="ti ti-chart-line" style="font-size:26px;color:#fff"></i></div>
+    <h1>Performance Portal</h1>
+    <div class="sub">TTE Pakistan · CPIS<br>Enter your credentials to continue</div>
+    <label class="fl">Employee ID</label>
+    <input class="fi" type="text" id="inId" placeholder="e.g. 007650" onkeydown="if(event.key==='Enter')document.getElementById('inPw').focus()">
+    <label class="fl">Password</label>
+    <div class="pw-wrap">
+      <input class="fi" type="password" id="inPw" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="pw-eye" onclick="togglePw()"><i class="ti ti-eye" id="pwIcon"></i></button>
+    </div>
+    <div class="err-box" id="errBox"></div>
+    <button class="btn btn-navy" onclick="doLogin()">Login</button>
+    <div class="hint">Your ID is on your employee card.<br>Password set by HR — contact HR if forgotten.</div>
+    <div><div class="back" onclick="goSetup()">← Back</div></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash" id="pg-dash">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="uinfo">
+        <div class="ava" id="dAva"></div>
+        <div><div class="uname" id="dName"></div><div class="umeta" id="dMeta"></div></div>
+      </div>
+      <button class="lo" onclick="doLogout()"><i class="ti ti-logout" style="font-size:14px"></i>Sign out</button>
+    </div>
+    <div id="dContent"></div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────
+var PUB = '2PACX-1vSLQiMuPQrE7WYClwkLp0YLqvDb0XtnaaqxDTlVvV6ZUY5WDBwGGTHEBJ5kw3tXH2fT8NDxgNlJKvb2';
+var GIDS = {
+  'Employee Master':'1106939539',
+  'HOD Setup':'619575060',
+  'Jul-26':'186783212',
+  'Aug-26':'264489843'
+};
+var MONTHS = [
+  {s:'Jul-26',m:'Jul'},{s:'Aug-26',m:'Aug'},{s:'Sep-26',m:'Sep'},
+  {s:'Oct-26',m:'Oct'},{s:'Nov-26',m:'Nov'},{s:'Dec-26',m:'Dec'},
+  {s:'Jan-27',m:'Jan'},{s:'Feb-27',m:'Feb'},{s:'Mar-27',m:'Mar'},
+  {s:'Apr-27',m:'Apr'},{s:'May-27',m:'May'},{s:'Jun-27',m:'Jun'}
+];
+
+// ── HELPERS ────────────────────────────────────────────────
+var DATA = null;
+var charts = [];
+
+function gw(s){return s>=90?'Superb':s>=80?'Excellent':s>=70?'Good':s>=60?'Average':'Poor';}
+function gc(s){return s>=70?'#1E7D34':s>=60?'#A05C00':'#A01E1E';}
+function gwc(w){return(w==='Superb'||w==='Excellent'||w==='Good')?'bg':w==='Average'?'ba':'br';}
+function stw(s){return s>=70?'On track':s>=60?'Keep going':'Focus required';}
+function stc(s){return s>=70?'bg':s>=60?'ba':'br';}
+function ini(n){return n.split(' ').slice(0,2).map(function(x){return x[0];}).join('');}
+function avg(ms,isQ){
+  if(!ms||!ms.length)return 0;
+  // For quarterly (S5), only count months that have actual KPI data (score > 0 or warning)
+  var valid = ms.filter(function(m){return m.score>0||m.warn;});
+  if(!valid.length) return 0;
+  var total = ms.reduce(function(a,m){return a+m.score;},0);
+  return Math.round(total/ms.length);
+}
+function bH(v,max,c){return '<div class="brb"><div class="brf" style="width:'+Math.round(v/max*100)+'%;background:'+c+'"></div></div>';}
+function killCharts(){charts.forEach(function(c){try{c.destroy();}catch(e){}});charts=[];}
+function gs(a,isLeader){
+  var leaderTxt = isLeader ? 'Review your team performance and consult with senior management.' : 'Speak with your manager.';
+  if(a>=70)return{c:'sb-g',i:'ti-circle-check',ic:'#1E7D34',t:'<strong>On track</strong> — your average meets the required threshold. Keep it consistent.'};
+  if(a>=60)return{c:'sb-a',i:'ti-alert-circle',ic:'#A05C00',t:'<strong>Keep going</strong> — you are close. A few strong months will bring you over.'};
+  return{c:'sb-r',i:'ti-alert-triangle',ic:'#A01E1E',t:'<strong>Focus required</strong> — your score needs improvement. '+leaderTxt};
+}
+
+// ── CSV FETCH ──────────────────────────────────────────────
+function parseCSV(txt){
+  if(!txt||!txt.trim())return[];
+  if(txt.indexOf('<!DOCTYPE')>=0||txt.indexOf('<html')>=0)return[];
+  var rows=[];
+  txt.split('\n').forEach(function(line){
+    if(!line.trim())return;
+    var row=[],inQ=false,val='';
+    for(var i=0;i<line.length;i++){
+      var ch=line[i];
+      if(ch==='"'){if(inQ&&line[i+1]==='"'){val+='"';i++;}else{inQ=!inQ;}}
+      else if(ch===','&&!inQ){row.push(val.trim());val='';}
+      else{val+=ch;}
+    }
+    row.push(val.trim());
+    rows.push(row);
+  });
+  return rows;
+}
+
+function fetchCSV(sheetName){
+  var gid=GIDS[sheetName];
+  if(!gid)return Promise.resolve([]);
+  var url='https://docs.google.com/spreadsheets/d/e/'+PUB+'/pub?gid='+gid+'&single=true&output=csv&cachebust='+Date.now();
+  return fetch(url)
+    .then(function(r){return r.text();})
+    .then(function(t){return parseCSV(t);})
+    .catch(function(){return[];});
+}
+
+// ── PARSE DATA ─────────────────────────────────────────────
+function buildData(empRows,hodRows,monthData){
+  var emps=[];
+  empRows.slice(1).forEach(function(r){
+    if(!r[0]||r[0]==='Emp ID')return;
+    // FIX 1: Skip inactive/resigned/terminated employees
+    var status = String(r[11]||'Active').trim().toLowerCase();
+    if(status==='inactive'||status==='resigned'||status==='terminated') return;
+    var name=String(r[1]||'');
+    var doj=r[5];
+    var fn=name.split(' ')[0]||name;
+    var yr=new Date().getFullYear();
+    if(doj){var d=new Date(doj);if(!isNaN(d))yr=d.getFullYear();}
+    var pw=String(r[8]||'').trim();
+    if(!pw||pw.startsWith('=')||pw==='Password')pw=fn+yr+'@TTE';
+    var isHR=String(r[7]||'').toLowerCase()==='yes';
+    var grade=String(r[3]||'');
+    // FIX 2: S5 = quarterly KPI
+    var isQuarterly = grade==='S5';
+    emps.push({
+      id:String(r[0]).trim(),name:name,
+      dept:String(r[2]||''),grade:grade,desig:String(r[4]||''),
+      isHR:isHR,role:isHR?'hr':'employee',
+      isQuarterly:isQuarterly,
+      password:pw,months:[]
+    });
+  });
+
+  var hodMap={},hodFull={};
+  hodRows.slice(1).forEach(function(r){
+    if(!r[0]||!r[2])return;
+    var id=String(r[0]).trim();
+    if(id.charAt(0)==='>'||id.charAt(0)==='\u25ba')return;
+    if(!hodMap[id])hodMap[id]=[];
+    hodMap[id].push(String(r[2]).trim());
+    if(String(r[4]||'').toLowerCase()==='yes')hodFull[id]=true;
+  });
+
+  emps.forEach(function(e){
+    if(e.isHR)return;
+    if(hodFull[e.id]){e.role='hr';}
+    else if(hodMap[e.id]){e.role='manager';e.depts=hodMap[e.id];}
+  });
+
+  Object.keys(hodMap).forEach(function(id){
+    if(emps.find(function(e){return e.id===id;}))return;
+    var depts=hodMap[id];
+    var fn=id,yr=new Date().getFullYear();
+    emps.push({
+      id:id,name:id,dept:depts[0]||'',grade:'',desig:'Department Head',
+      isHR:false,role:hodFull[id]?'hr':'manager',depts:depts,
+      password:id+'@TTE',months:[]
+    });
+  });
+
+  monthData.forEach(function(item){
+    item.rows.slice(1).forEach(function(r){
+      if(!r[0])return;
+      var emp=emps.find(function(e){return e.id===String(r[0]).trim();});
+      if(!emp)return;
+      var warn=String(r[7]||'').toLowerCase()==='yes';
+      var score=Number(r[10])||0;
+      if(!score&&!warn)return;
+      emp.months.push({m:item.m,kpi:Number(r[6])||0,ten:Number(r[8])||0,con:0,warn:warn,score:score});
+    });
+  });
+
+  // Recalculate consistency
+  emps.forEach(function(emp){
+    emp.months.forEach(function(mo,idx){
+      if(!idx){mo.con=0;return;}
+      var lb=emp.months.slice(Math.max(0,idx-6),idx);
+      var ok=lb.filter(function(m){return m.kpi>=48;}).length;
+      mo.con=Math.round(ok/lb.length*10);
+    });
+  });
+
+  return emps;
+}
+
+// ── LOAD LIVE ──────────────────────────────────────────────
+function loadLive(){
+  var btn=document.getElementById('loadBtn');
+  var msg=document.getElementById('loadMsg');
+  btn.disabled=true;btn.textContent='Loading...';
+  msg.textContent='Loading employee data...';
+
+  var empRows=[],hodRows=[],monthData=[];
+
+  fetchCSV('Employee Master')
+  .then(function(r){empRows=r;msg.textContent='Loading HOD setup...';return fetchCSV('HOD Setup');})
+  .then(function(r){
+    hodRows=r;
+    msg.textContent='Loading monthly data...';
+    var p=Promise.resolve();
+    MONTHS.forEach(function(item){
+      if(!GIDS[item.s])return;
+      p=p.then(function(){
+        return fetchCSV(item.s).then(function(rows){
+          if(rows&&rows.length>1)monthData.push({m:item.m,rows:rows});
+        });
+      });
+    });
+    return p;
+  })
+  .then(function(){
+    var emps=buildData(empRows,hodRows,monthData);
+    DATA={employees:emps};
+    msg.textContent=emps.length+' employees loaded!';
+    setTimeout(goLogin,800);
+  })
+  .catch(function(e){
+    btn.disabled=false;btn.textContent='Retry';
+    msg.style.color='var(--red)';
+    msg.textContent='Error: '+e.message;
+  });
+}
+
+// ── DEMO DATA ──────────────────────────────────────────────
+var DEMO={employees:[
+  {id:'007650',name:'Muhammad Rameez',grade:'N-3',dept:'HR',desig:'Sr. C&B Executive',role:'hr',isHR:true,isQuarterly:false,password:'Muhammad2020@TTE',
+   months:[{m:'Jul',kpi:64,ten:8,con:0,warn:false,score:72},{m:'Aug',kpi:80,ten:8,con:7,warn:false,score:95},{m:'Sep',kpi:64,ten:8,con:8,warn:false,score:80}]},
+  {id:'007200',name:'Sara Ahmed',grade:'N-3',dept:'HR',desig:'HR Executive',role:'employee',isHR:false,isQuarterly:false,password:'Sara2021@TTE',
+   months:[{m:'Jul',kpi:64,ten:6,con:0,warn:false,score:70},{m:'Aug',kpi:48,ten:6,con:5,warn:false,score:59},{m:'Sep',kpi:64,ten:6,con:6,warn:false,score:76}]},
+  {id:'007100',name:'Kamran Malik',grade:'N-2',dept:'HR',desig:'HR Officer',role:'employee',isHR:false,isQuarterly:false,password:'Kamran2022@TTE',
+   months:[{m:'Jul',kpi:48,ten:4,con:0,warn:false,score:52},{m:'Aug',kpi:0,ten:0,con:0,warn:true,score:0},{m:'Sep',kpi:48,ten:4,con:3,warn:false,score:55}]},
+  {id:'006500',name:'Hassan Raza',grade:'M-4',dept:'Engineering',desig:'Deputy Manager',role:'employee',isHR:false,isQuarterly:false,password:'Hassan2019@TTE',
+   months:[{m:'Jul',kpi:80,ten:10,con:0,warn:false,score:90},{m:'Aug',kpi:80,ten:10,con:10,warn:false,score:100},{m:'Sep',kpi:80,ten:10,con:10,warn:false,score:100}]},
+  {id:'EX001',name:'Resigned Employee',grade:'N-2',dept:'HR',desig:'Ex Officer',role:'employee',isHR:false,isQuarterly:false,status:'Inactive',password:'Ex2020@TTE',
+   months:[]},
+  {id:'S5001',name:'S5 Employee',grade:'S5',dept:'Production',desig:'Supervisor',role:'employee',isHR:false,isQuarterly:true,password:'S52020@TTE',
+   months:[{m:'Jul',kpi:64,ten:8,con:0,warn:false,score:72},{m:'Oct',kpi:80,ten:8,con:7,warn:false,score:95}]},
+  {id:'MGR001',name:'Nadir Khan',grade:'M-5',dept:'HR',desig:'HR Manager',role:'manager',isHR:false,isQuarterly:false,depts:['HR'],password:'Nadir2025@TTE',
+   months:[{m:'Jul',kpi:64,ten:10,con:0,warn:false,score:74},{m:'Aug',kpi:80,ten:10,con:8,warn:false,score:98},{m:'Sep',kpi:64,ten:10,con:8,warn:false,score:82}]},
+  {id:'HR001',name:'HR Admin',grade:'N-3',dept:'HR',desig:'HR Administrator',role:'hr',isHR:true,isQuarterly:false,password:'HR2020@TTE',months:[]}
+]};
+
+function loadDemo(){DATA=DEMO;goLogin();}
+
+// ── NAV ────────────────────────────────────────────────────
+function show(id){
+  ['pg-setup','pg-login'].forEach(function(p){
+    var el=document.getElementById(p);
+    el.classList.remove('active');
+    el.style.display='none';
+  });
+  document.getElementById('pg-dash').style.display='none';
+  var el=document.getElementById(id);
+  if(id==='pg-dash'){el.style.display='block';}
+  else{el.style.display='flex';el.classList.add('active');}
+}
+function goSetup(){document.getElementById('inId').value='';document.getElementById('inPw').value='';document.getElementById('errBox').style.display='none';show('pg-setup');}
+function goLogin(){show('pg-login');}
+function swTab(id,btn){
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');});
+  document.getElementById('p-'+id).classList.add('on');
+}
+function togglePw(){
+  var i=document.getElementById('inPw');
+  var ic=document.getElementById('pwIcon');
+  i.type=i.type==='password'?'text':'password';
+  ic.className=i.type==='password'?'ti ti-eye':'ti ti-eye-off';
+}
+
+// ── LOGIN ──────────────────────────────────────────────────
+function doLogin(){
+  var id=document.getElementById('inId').value.trim();
+  var pw=document.getElementById('inPw').value.trim();
+  var eb=document.getElementById('errBox');
+  eb.style.display='none';
+  if(!DATA){eb.textContent='Please load data first.';eb.style.display='block';return;}
+  if(!id){eb.textContent='Please enter your Employee ID.';eb.style.display='block';return;}
+  if(!pw){eb.textContent='Please enter your password.';eb.style.display='block';return;}
+  var u=DATA.employees.find(function(e){return e.id===id;});
+  if(!u){eb.textContent='ID not found. Check your employee card or contact HR.';eb.style.display='block';return;}
+  var stored=(u.password||'').trim();
+  if(stored&&stored!==pw){eb.textContent='Incorrect password. Please try again or contact HR.';eb.style.display='block';return;}
+  show('pg-dash');
+  var rc=u.role==='hr'?'ava-h':u.role==='manager'?'ava-m':'ava-e';
+  var rl=u.role==='hr'?'HR':u.role==='manager'?'Manager':'Employee';
+  var rt=u.role==='hr'?'rtag-h':u.role==='manager'?'rtag-m':'rtag-e';
+  document.getElementById('dAva').className='ava '+rc;
+  document.getElementById('dAva').textContent=ini(u.name);
+  document.getElementById('dName').innerHTML=u.name+'<span class="rtag '+rt+'">'+rl+'</span>';
+  document.getElementById('dMeta').textContent=(u.desig||'')+' · '+(u.grade||'')+' · '+(u.dept||'');
+  if(u.role==='manager')renderMgr(u);
+  else if(u.role==='hr')renderHR(u);
+  else renderEmp(u);
+}
+
+function doLogout(){
+  killCharts();
+  document.getElementById('inId').value='';
+  document.getElementById('inPw').value='';
+  document.getElementById('dContent').innerHTML='';
+  goSetup();
+}
+
+// ── EMPLOYEE ───────────────────────────────────────────────
+function renderEmp(u){
+  var ms=u.months;
+  if(!ms||!ms.length){document.getElementById('dContent').innerHTML='<div class="bx"><div class="bxp">No data yet. HR will upload monthly scores shortly.</div></div>';return;}
+  var last=ms[ms.length-1];
+  var a=avg(ms);
+  var st=gs(a);
+  var h='';
+  h+='<div class="sb '+st.c+'"><i class="ti '+st.i+'" style="font-size:19px;color:'+st.ic+';flex-shrink:0;margin-top:1px"></i><div>'+st.t+'</div></div>';
+  h+='<div class="g4">';
+  h+='<div class="kc"><div class="kl">This month</div><div class="kv">'+last.score+'</div><div class="ks">out of 100</div></div>';
+  h+='<div class="kc"><div class="kl">'+ms.length+'-month avg</div><div class="kv" style="color:'+gc(a)+'">'+a+'</div><div class="ks">'+gw(a)+'</div></div>';
+  h+='<div class="kc"><div class="kl">Tenure score</div><div class="kv">'+last.ten+'<span style="font-size:14px;color:var(--text3)">/10</span></div><div class="ks">in current grade</div></div>';
+  h+='<div class="kc"><div class="kl">Consistency</div><div class="kv">'+last.con+'<span style="font-size:14px;color:var(--text3)">/10</span></div><div class="ks">last 6 months</div></div>';
+  h+='</div>';
+  h+='<div class="g2">';
+  h+='<div class="bx"><div class="st">This month — breakdown</div>';
+  h+='<div class="br-row"><div class="brl"><i class="ti ti-target"></i>KPI score</div><div class="brr"><span class="brs" style="color:'+gc(last.kpi/80*100)+'">'+last.kpi+'<span style="color:var(--text3);font-size:11px">/80</span></span>'+bH(last.kpi,80,'#1F6FEB')+'</div></div>';
+  h+='<div class="br-row"><div class="brl"><i class="ti ti-clock"></i>Tenure</div><div class="brr"><span class="brs">'+last.ten+'<span style="color:var(--text3);font-size:11px">/10</span></span>'+bH(last.ten,10,'#1E7D34')+'</div></div>';
+  h+='<div class="br-row"><div class="brl"><i class="ti ti-trending-up"></i>Consistency</div><div class="brr"><span class="brs">'+last.con+'<span style="color:var(--text3);font-size:11px">/10</span></span>'+bH(last.con,10,'#1E7D34')+'</div></div>';
+  h+='<div class="br-row"><div class="brl"><i class="ti ti-shield-check"></i>No warning</div><div class="brr"><span class="brs" style="color:'+(last.warn?'#A01E1E':'#1E7D34')+'">'+(last.warn?0:10)+'<span style="color:var(--text3);font-size:11px">/10</span></span>'+bH(last.warn?0:10,10,last.warn?'#A01E1E':'#1E7D34')+'</div></div>';
+  if(last.warn)h+='<div style="font-size:12px;color:var(--red);padding:7px 10px;background:var(--red-bg);border-radius:7px;margin-top:8px;border:1px solid var(--red-br)">Warning received — total score this month is 0</div>';
+  h+='<div class="brt"><span style="font-size:13px;font-weight:600">Total this month</span><span style="font-size:17px;font-weight:700;color:'+gc(last.score)+'">'+last.score+' / 100</span></div></div>';
+  h+='<div class="bx"><div class="st">Monthly history</div>';
+  ms.forEach(function(m){h+='<div class="mhr"><span class="mhm">'+m.m+'</span><div class="mhb"><div class="mhf" style="width:'+m.score+'%;background:'+gc(m.score)+'"></div></div><span class="mhs">'+m.score+'</span><span class="mhw" style="color:'+gc(m.score)+'">'+gw(m.score)+'</span></div>';});
+  h+='<div class="mha"><span style="font-size:12px;color:var(--text2);font-weight:500">'+ms.length+'-month average</span><span style="font-size:15px;font-weight:700;color:'+gc(a)+'">'+a+' / 100</span></div></div></div>';
+  h+='<div class="bx"><div class="bxt">How to improve</div><div class="bxp">KPI carries 80 of your 100 points — focus on your monthly targets. Consistent strong performance builds your consistency score. Any warning month resets that month total to zero.</div></div>';
+  document.getElementById('dContent').innerHTML=h;
+}
+
+// ── MANAGER ────────────────────────────────────────────────
+function renderMgr(u){
+  var h='';
+
+  // ── OWN PERFORMANCE (full view like employee) ──────────
+  if(u.months&&u.months.length){
+    var ms=u.months;
+    var a=avg(ms);
+    var last=ms[ms.length-1];
+    var st=gs(a,true);
+
+    h+='<div class="bx" style="margin-bottom:1.25rem">';
+    h+='<div class="st" style="margin-bottom:10px">Your performance</div>';
+    h+='<div class="sb '+st.c+'" style="margin-bottom:1rem"><i class="ti '+st.i+'" style="font-size:18px;color:'+st.ic+';flex-shrink:0;margin-top:1px"></i><div>'+st.t+'</div></div>';
+    h+='<div class="g4" style="margin-bottom:1rem">';
+    h+='<div class="kc"><div class="kl">This month</div><div class="kv">'+last.score+'</div><div class="ks">out of 100</div></div>';
+    h+='<div class="kc"><div class="kl">'+ms.length+'-month avg</div><div class="kv" style="color:'+gc(a)+'">'+a+'</div><div class="ks">'+gw(a)+'</div></div>';
+    h+='<div class="kc"><div class="kl">Tenure score</div><div class="kv">'+last.ten+'<span style="font-size:14px;color:var(--text3)">/10</span></div><div class="ks">in current grade</div></div>';
+    h+='<div class="kc"><div class="kl">Consistency</div><div class="kv">'+last.con+'<span style="font-size:14px;color:var(--text3)">/10</span></div><div class="ks">score</div></div>';
+    h+='</div>';
+    h+='<div class="g2">';
+    h+='<div class="bx"><div class="st">This month — breakdown</div>';
+    h+='<div class="br-row"><div class="brl"><i class="ti ti-target"></i>KPI score</div><div class="brr"><span class="brs" style="color:'+gc(last.kpi/80*100)+'">'+last.kpi+'<span style="color:var(--text3);font-size:11px">/80</span></span>'+bH(last.kpi,80,'#1F6FEB')+'</div></div>';
+    h+='<div class="br-row"><div class="brl"><i class="ti ti-clock"></i>Tenure</div><div class="brr"><span class="brs">'+last.ten+'<span style="color:var(--text3);font-size:11px">/10</span></span>'+bH(last.ten,10,'#1E7D34')+'</div></div>';
+    h+='<div class="br-row"><div class="brl"><i class="ti ti-trending-up"></i>Consistency</div><div class="brr"><span class="brs">'+last.con+'<span style="color:var(--text3);font-size:11px">/10</span></span>'+bH(last.con,10,'#1E7D34')+'</div></div>';
+    h+='<div class="br-row"><div class="brl"><i class="ti ti-shield-check"></i>No warning</div><div class="brr"><span class="brs" style="color:'+(last.warn?'#A01E1E':'#1E7D34')+'">'+(last.warn?0:10)+'<span style="color:var(--text3);font-size:11px">/10</span></span>'+bH(last.warn?0:10,10,last.warn?'#A01E1E':'#1E7D34')+'</div></div>';
+    if(last.warn)h+='<div style="font-size:12px;color:var(--red);padding:7px 10px;background:var(--red-bg);border-radius:7px;margin-top:8px;border:1px solid var(--red-br)">Warning received — total score this month is 0</div>';
+    h+='<div class="brt"><span style="font-size:13px;font-weight:600">Total this month</span><span style="font-size:17px;font-weight:700;color:'+gc(last.score)+'">'+last.score+' / 100</span></div></div>';
+    h+='<div class="bx"><div class="st">Monthly history</div>';
+    ms.forEach(function(m){
+      h+='<div class="mhr"><span class="mhm">'+m.m+'</span><div class="mhb"><div class="mhf" style="width:'+m.score+'%;background:'+gc(m.score)+'"></div></div><span class="mhs">'+m.score+'</span><span class="mhw" style="color:'+gc(m.score)+'">'+gw(m.score)+'</span></div>';
+    });
+    h+='<div class="mha"><span style="font-size:12px;color:var(--text2);font-weight:500">'+ms.length+'-month average</span><span style="font-size:15px;font-weight:700;color:'+gc(a)+'">'+a+' / 100</span></div>';
+    h+='</div></div></div>';
+    h+='<hr class="div">';
+  }
+
+  // ── DEPARTMENT TEAM ────────────────────────────────────
+  var myDepts=u.depts&&u.depts.length?u.depts:[u.dept];
+  var isAll=myDepts.indexOf('ALL')>=0;
+  var team=DATA.employees.filter(function(e){
+    return(isAll||myDepts.some(function(d){return d===e.dept;}))&&
+           e.role==='employee'&&e.months&&e.months.length&&e.id!==u.id;
+  });
+
+  if(!team.length){
+    h+='<div class="bx"><div class="bxp">No team data available yet.</div></div>';
+    document.getElementById('dContent').innerHTML=h;
+    return;
+  }
+
+  var td=team.map(function(e){var a=avg(e.months);return{id:e.id,name:e.name,grade:e.grade,dept:e.dept,avg:a,word:gw(a)};});
+  var da=Math.round(td.reduce(function(a,e){return a+e.avg;},0)/td.length);
+  var onT=td.filter(function(e){return e.avg>=70;}).length;
+  var risky=td.filter(function(e){return e.avg<60;});
+  var multi=myDepts.length>1||isAll;
+
+  h+='<div class="g3">';
+  h+='<div class="kc"><div class="kl">Team size</div><div class="kv">'+team.length+'</div><div class="ks">'+(isAll?'All departments':myDepts.join(' + '))+'</div></div>';
+  h+='<div class="kc"><div class="kl">Dept average</div><div class="kv" style="color:'+gc(da)+'">'+da+'</div><div class="ks">'+gw(da)+'</div></div>';
+  h+='<div class="kc"><div class="kl">On track</div><div class="kv" style="color:#1E7D34">'+onT+'</div><div class="ks">of '+team.length+'</div></div></div>';
+
+  if(risky.length){
+    h+='<div class="al"><i class="ti ti-alert-triangle" style="font-size:18px;flex-shrink:0;margin-top:1px"></i>';
+    h+='<div><strong>'+risky.map(function(e){return e.name;}).join(', ')+'</strong> scoring below average. Consider a performance conversation.</div></div>';
+  }
+
+  h+='<div class="st">Team overview</div>';
+  h+='<div class="tw"><table><thead><tr><th>Name</th><th>Grade</th>';
+  if(multi)h+='<th>Department</th>';
+  h+='<th>Performance</th><th>Average</th><th>Status</th></tr></thead><tbody>';
+
+  td.sort(function(a,b){return b.avg-a.avg;}).forEach(function(e){
+    h+='<tr><td><strong>'+e.name+'</strong></td>';
+    h+='<td><span class="bdg bp">'+e.grade+'</span></td>';
+    if(multi)h+='<td style="color:var(--text2)">'+e.dept+'</td>';
+    h+='<td><span class="bdg '+gwc(e.word)+'">'+e.word+'</span></td>';
+    h+='<td>'+e.avg+'<span class="sb2"><span class="sf" style="width:'+e.avg+'%;background:'+gc(e.avg)+'"></span></span></td>';
+    h+='<td><span class="bdg '+stc(e.avg)+'">'+stw(e.avg)+'</span></td></tr>';
+  });
+
+  h+='</tbody></table></div>';
+  document.getElementById('dContent').innerHTML=h;
+}
+
+// ── HR ─────────────────────────────────────────────────────
+function renderHR(u){
+  var emps=DATA.employees.filter(function(e){return e.months&&e.months.length;}).map(function(e){var a=avg(e.months);return{id:e.id,name:e.name,grade:e.grade,dept:e.dept,avg:a,word:gw(a),months:e.months};});
+  var tot=emps.length,onT=emps.filter(function(e){return e.avg>=70;}).length;
+  var kg=emps.filter(function(e){return e.avg>=60&&e.avg<70;}).length;
+  var fr=emps.filter(function(e){return e.avg<60;}).length;
+  var ga=tot?Math.round(emps.reduce(function(a,e){return a+e.avg;},0)/tot):0;
+  var wc=emps.filter(function(e){return e.months[e.months.length-1]&&e.months[e.months.length-1].warn;}).length;
+  var ml=emps.length&&emps[0].months?emps[0].months.map(function(m){return m.m;}):[],mv=[];
+  ml.forEach(function(_,i){mv.push(Math.round(emps.reduce(function(a,e){return a+(e.months[i]?e.months[i].score:0);},0)/emps.length));});
+  var depts=[...new Set(emps.map(function(e){return e.dept;}))].sort();
+
+  document.getElementById('dContent').innerHTML=
+    '<div class="htabs"><button class="htab on" onclick="ht(\'ov\',this)">Overview</button><button class="htab" onclick="ht(\'em\',this)">All employees</button><button class="htab" onclick="ht(\'ot\',this)">On track</button><button class="htab" onclick="ht(\'dp\',this)">Departments</button></div>'+
+    '<div class="hpanel on" id="hp-ov">'+
+    '<div class="g4"><div class="kc"><div class="kl">Total staff</div><div class="kv">'+tot+'</div><div class="ks">TTE active</div></div>'+
+    '<div class="kc"><div class="kl">On track</div><div class="kv" style="color:#1E7D34">'+onT+'</div><div class="ks">score 70+</div></div>'+
+    '<div class="kc"><div class="kl">Keep going</div><div class="kv" style="color:#A05C00">'+kg+'</div><div class="ks">score 60–69</div></div>'+
+    '<div class="kc"><div class="kl">Focus required</div><div class="kv" style="color:#A01E1E">'+fr+'</div><div class="ks">below 60</div></div></div>'+
+    '<div class="g2"><div class="kc"><div class="kl">Group average</div><div class="kv" style="color:'+gc(ga)+'">'+ga+'</div><div class="ks">'+gw(ga)+'</div></div>'+
+    '<div class="kc"><div class="kl">Warnings this month</div><div class="kv" style="color:#A01E1E">'+wc+'</div><div class="ks">score set to 0</div></div></div>'+
+    '<div class="bx"><div class="st">Monthly group average</div><div style="position:relative;height:190px"><canvas id="tc"></canvas></div></div>'+
+    '<div class="bx"><div class="st">Score distribution</div><div style="position:relative;height:150px"><canvas id="dc"></canvas></div></div></div>'+
+    '<div class="hpanel" id="hp-em">'+
+    '<div class="fr"><select id="dfil" onchange="fEmps()"><option value="">All departments</option>'+depts.map(function(d){return'<option>'+d+'</option>';}).join('')+'</select>'+
+    '<select id="sfil" onchange="fEmps()"><option value="">All statuses</option><option>On track</option><option>Keep going</option><option>Focus required</option></select>'+
+    '<input id="nfil" placeholder="Search name..." oninput="fEmps()" style="min-width:160px"></div>'+
+    '<div class="tw"><table><thead><tr><th>Name</th><th>Grade</th><th>Department</th><th>Performance</th><th>Score</th><th>Status</th></tr></thead><tbody id="eTbl"></tbody></table></div></div>'+
+    '<div class="hpanel" id="hp-ot">'+
+    '<div class="st" style="margin-bottom:12px">On track — '+onT+' employees scoring 70+</div>'+
+    '<div class="tw"><table><thead><tr><th>Name</th><th>Grade</th><th>Department</th><th>Performance</th><th>Average</th></tr></thead><tbody>'+
+    emps.filter(function(e){return e.avg>=70;}).sort(function(a,b){return b.avg-a.avg;}).map(function(e){
+      return'<tr><td><strong>'+e.name+'</strong></td><td><span class="bdg bp">'+e.grade+'</span></td><td style="color:var(--text2)">'+e.dept+'</td><td><span class="bdg '+gwc(e.word)+'">'+e.word+'</span></td><td><strong style="color:#1E7D34">'+e.avg+'</strong><span class="sb2"><span class="sf" style="width:'+e.avg+'%;background:#1E7D34"></span></span></td></tr>';
+    }).join('')+
+    '</tbody></table></div></div>'+
+    '<div class="hpanel" id="hp-dp"><div class="dg" id="dg"></div></div>';
+
+  fillEmps(emps);fillDepts(emps);
+
+  setTimeout(function(){
+    var tc=new Chart(document.getElementById('tc'),{type:'line',data:{labels:ml,datasets:[{data:mv,borderColor:'#1F6FEB',borderWidth:2.5,pointBackgroundColor:'#1F6FEB',pointRadius:4,tension:.35,fill:true,backgroundColor:'rgba(31,111,235,0.07)'},{data:ml.map(function(){return 70;}),borderColor:'#CBD5E1',borderWidth:1.5,borderDash:[5,4],pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:40,max:100,ticks:{color:'#8B8BAA',font:{size:11}},grid:{color:'#E2E8F0'}},x:{ticks:{color:'#8B8BAA',font:{size:11}},grid:{display:false}}}}});
+    var dc=new Chart(document.getElementById('dc'),{type:'bar',data:{labels:['On track','Keep going','Focus required'],datasets:[{data:[onT,kg,fr],backgroundColor:['#1E7D34','#A05C00','#A01E1E'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{stepSize:1,color:'#8B8BAA',font:{size:11}},grid:{color:'#E2E8F0'}},x:{ticks:{color:'#8B8BAA',font:{size:11}},grid:{display:false}}}}});
+    charts.push(tc,dc);
+  },100);
+}
+
+function fillEmps(data){
+  document.getElementById('eTbl').innerHTML=data.map(function(e){
+    return'<tr><td><strong>'+e.name+'</strong></td><td><span class="bdg bp">'+e.grade+'</span></td><td style="color:var(--text2)">'+e.dept+'</td><td><span class="bdg '+gwc(e.word)+'">'+e.word+'</span></td><td>'+e.avg+'<span class="sb2"><span class="sf" style="width:'+e.avg+'%;background:'+gc(e.avg)+'"></span></span></td><td><span class="bdg '+stc(e.avg)+'">'+stw(e.avg)+'</span></td></tr>';
+  }).join('');
+}
+
+function fEmps(){
+  var d=document.getElementById('dfil').value;
+  var s=document.getElementById('sfil').value;
+  var q=document.getElementById('nfil').value.toLowerCase();
+  var f=DATA.employees.filter(function(e){return e.months&&e.months.length;}).map(function(e){var a=avg(e.months);return{id:e.id,name:e.name,grade:e.grade,dept:e.dept,avg:a,word:gw(a)};});
+  if(d)f=f.filter(function(e){return e.dept===d;});
+  if(s)f=f.filter(function(e){return stw(e.avg)===s;});
+  if(q)f=f.filter(function(e){return e.name.toLowerCase().indexOf(q)>=0;});
+  fillEmps(f);
+}
+
+function fillDepts(emps){
+  var dp={};
+  emps.forEach(function(e){if(!dp[e.dept])dp[e.dept]={list:[],tot:0};dp[e.dept].list.push(e);dp[e.dept].tot+=e.avg;});
+  document.getElementById('dg').innerHTML=Object.keys(dp).sort().map(function(k){
+    var d=dp[k],a=Math.round(d.tot/d.list.length),onT=d.list.filter(function(e){return e.avg>=70;}).length;
+    var dots=d.list.map(function(e){return'<div class="dot" style="background:'+gc(e.avg)+'" title="'+e.name+': '+e.avg+'"></div>';}).join('');
+    return'<div class="dc"><div class="dn">'+k+'</div><div class="dd">'+dots+'</div><div class="dstat">'+d.list.length+' staff &nbsp;·&nbsp; avg <strong style="color:'+gc(a)+'">'+a+'</strong> &nbsp;·&nbsp; <span style="color:#1E7D34;font-weight:600">'+onT+' on track</span></div></div>';
+  }).join('');
+}
+
+function ht(id,btn){
+  document.querySelectorAll('.htab').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');
+  document.querySelectorAll('.hpanel').forEach(function(p){p.classList.remove('on');});
+  document.getElementById('hp-'+id).classList.add('on');
+}
+</script>
+</body>
+</html>
