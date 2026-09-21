@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CPIS Portal — TTE Pakistan</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1B3A6B;--sky:#EBF4FF;--green:#1E7D34;--green-bg:#E8F5EB;--green-br:#B8DFBF;
+  --amber:#A05C00;--amber-bg:#FFF3DC;--amber-br:#F5C97A;--red:#A01E1E;--red-bg:#FFE8E8;--red-br:#F5ABAB;
+  --blue:#1F6FEB;--blue-bg:#EBF2FF;--purple:#7C3AED;--purple-bg:#F3EFFE;
+  --text:#1A1A2E;--text2:#555577;--text3:#8B8BAA;--border:#CBD5E1;--border2:#E2E8F0;
+  --bg:#F0F4F8;--surface:#fff;--surface2:#F8FAFB;--radius:12px;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+
+/* PAGES */
+.pg{display:none;min-height:100vh}
+.pg.on{display:flex}
+.pg-center{align-items:center;justify-content:center;padding:1rem}
+
+/* SETUP */
+.setup-wrap{display:flex;width:100%;max-width:900px;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.setup-left{flex:1;background:linear-gradient(160deg,#1B3A6B,#1F6FEB);padding:3rem 2.5rem;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.setup-right{flex:1;background:#fff;padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:center}
+.s-logo{width:70px;height:70px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);border-radius:20px;display:flex;align-items:center;justify-content:center;margin-bottom:1.75rem}
+.s-title{font-size:34px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:.75rem}
+.s-sub{font-size:14px;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:2rem}
+.s-company{border-top:1px solid rgba(255,255,255,.2);padding-top:1.25rem;font-size:13px;font-weight:700;color:rgba(255,255,255,.85)}
+.r-title{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.r-sub{font-size:13px;color:var(--text3);margin-bottom:1.75rem}
+.live-dot{display:flex;align-items:center;gap:8px;background:var(--green-bg);border:1px solid var(--green-br);border-radius:10px;padding:10px 14px;margin-bottom:1.5rem}
+.pulse{width:9px;height:9px;background:#1E7D34;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,125,52,.5)}70%{box-shadow:0 0 0 7px rgba(30,125,52,0)}100%{box-shadow:0 0 0 0 rgba(30,125,52,0)}}
+.live-txt{font-size:12px;font-weight:700;color:#1E7D34}
+.load-btn{width:100%;padding:14px;font-size:15px;font-weight:700;border-radius:12px;border:none;background:linear-gradient(135deg,#1B3A6B,#1F6FEB);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(31,111,235,.3)}
+.load-btn:hover{opacity:.9}.load-btn:disabled{opacity:.6;cursor:not-allowed}
+.msg{font-size:12px;color:var(--text2);text-align:center;margin-top:8px;min-height:18px}
+.demo-lnk{text-align:center;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border2);font-size:12px;color:var(--text3)}
+.demo-lnk span{color:var(--blue);cursor:pointer;font-weight:600}
+.demo-panel{display:none;margin-top:.75rem}
+.demo-row{background:var(--surface2);border:1.5px solid var(--border2);border-radius:9px;padding:.7rem 1rem;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.demo-role{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase}
+.demo-cred{font-size:11px;color:var(--text2)}
+code{background:var(--blue-bg);color:var(--blue);padding:1px 5px;border-radius:4px;font-family:monospace}
+.demo-btn{width:100%;padding:12px;font-size:14px;font-weight:700;border-radius:12px;border:none;background:var(--navy);color:#fff;cursor:pointer;margin-top:.75rem}
+.back-lnk{text-align:center;font-size:12px;color:var(--text3);cursor:pointer;margin-top:.5rem}
+
+/* LOGIN */
+.login-wrap{display:flex;width:100%;max-width:900px;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.login-left{flex:1;background:linear-gradient(160deg,#1B3A6B,#1F6FEB);padding:3rem 2.5rem;display:flex;align-items:center;justify-content:center}
+.login-left-inner{text-align:center}
+.ll-logo{width:70px;height:70px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem}
+.ll-title{font-size:30px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:.5rem}
+.ll-sub{font-size:13px;color:rgba(255,255,255,.7);line-height:1.7}
+.login-right{flex:1;background:#fff;padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:center}
+.lr-title{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.lr-sub{font-size:13px;color:var(--text3);margin-bottom:1.75rem}
+.fl{font-size:11px;font-weight:700;color:var(--text3);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+input.fi{width:100%;padding:12px 16px;font-size:14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);margin-bottom:12px;outline:none}
+input.fi:focus{border-color:var(--blue);background:#fff}
+.pw-wrap{position:relative;margin-bottom:16px}
+.pw-wrap input{margin-bottom:0;padding-right:44px}
+.pw-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3);background:none;border:none;font-size:18px}
+.err-box{font-size:12px;color:var(--red);padding:8px 12px;border-radius:8px;background:var(--red-bg);border:1px solid var(--red-br);display:none;margin-bottom:10px}
+.login-btn{width:100%;padding:13px;font-size:15px;font-weight:700;border-radius:12px;border:none;background:linear-gradient(135deg,#1B3A6B,#1F6FEB);color:#fff;cursor:pointer}
+.login-btn:hover{opacity:.9}
+.hint{font-size:11px;color:var(--text3);text-align:center;margin-top:12px;line-height:1.6}
+.back{font-size:12px;color:var(--blue);cursor:pointer;display:inline-block;margin-top:8px;text-align:center;width:100%}
+
+/* DASHBOARD */
+.dash-pg{display:none;min-height:100vh;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto;padding:1.5rem 1rem}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding:1rem 1.5rem;background:#fff;border-radius:var(--radius);border:1.5px solid var(--border2);box-shadow:0 2px 8px rgba(31,111,235,.06);flex-wrap:wrap;gap:10px}
+.uinfo{display:flex;align-items:center;gap:12px}
+.ava{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:2px solid}
+.ava-e{background:var(--blue-bg);color:var(--blue);border-color:#B8D4F5}
+.ava-m{background:var(--green-bg);color:var(--green);border-color:var(--green-br)}
+.ava-h{background:var(--purple-bg);color:var(--purple);border-color:#C4A8F5}
+.uname{font-size:15px;font-weight:700;color:var(--navy)}
+.umeta{font-size:12px;color:var(--text2);margin-top:2px}
+.rtag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;text-transform:uppercase;border:1px solid}
+.rtag-e{background:var(--blue-bg);color:var(--blue);border-color:#B8D4F5}
+.rtag-m{background:var(--green-bg);color:var(--green);border-color:var(--green-br)}
+.rtag-h{background:var(--purple-bg);color:var(--purple);border-color:#C4A8F5}
+.lo{font-size:12px;color:var(--text2);cursor:pointer;background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 16px;display:flex;align-items:center;gap:5px}
+.lo:hover{border-color:var(--red);color:var(--red)}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.25rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.kc{background:#fff;border:1.5px solid var(--border2);border-radius:var(--radius);padding:.9rem 1.1rem;box-shadow:0 2px 8px rgba(31,111,235,.05);border-left:4px solid var(--blue)}
+.kl{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.kv{font-size:26px;font-weight:800;line-height:1;color:var(--navy)}
+.ks{font-size:11px;color:var(--text3);margin-top:4px}
+.sb{border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:10px;border:1.5px solid;font-size:13px;line-height:1.5}
+.sb-g{background:var(--green-bg);border-color:var(--green-br)}.sb-a{background:var(--amber-bg);border-color:var(--amber-br)}.sb-r{background:var(--red-bg);border-color:var(--red-br)}
+.bdg{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid}
+.bg{background:var(--green-bg);color:var(--green);border-color:var(--green-br)}.ba{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-br)}.br{background:var(--red-bg);color:var(--red);border-color:var(--red-br)}.bp{background:var(--purple-bg);color:var(--purple);border-color:#C4A8F5}
+.bx{background:#fff;border:1.5px solid var(--border2);border-radius:var(--radius);padding:1rem 1.1rem;box-shadow:0 2px 8px rgba(31,111,235,.05);margin-bottom:1.25rem}
+.bxt{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--navy)}.bxp{font-size:13px;color:var(--text2);line-height:1.6}
+.st{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.br-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border2)}.br-row:last-child{border-bottom:none}
+.brl{font-size:13px;display:flex;align-items:center;gap:7px}.brl i{color:var(--blue);font-size:16px}
+.brr{display:flex;align-items:center;gap:8px}.brs{font-size:13px;font-weight:700;min-width:52px;text-align:right;color:var(--navy)}
+.brb{width:72px;height:6px;background:var(--border2);border-radius:3px;overflow:hidden}.brf{height:100%;border-radius:3px}
+.brt{display:flex;justify-content:space-between;align-items:center;padding-top:10px;margin-top:6px;border-top:2px solid var(--blue-bg)}
+.mhr{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border2)}.mhr:last-child{border-bottom:none}
+.mhm{font-size:12px;color:var(--blue);min-width:30px;font-weight:700}.mhb{flex:1;height:7px;background:var(--border2);border-radius:4px;overflow:hidden}.mhf{height:100%;border-radius:4px}
+.mhs{font-size:12px;font-weight:700;min-width:28px;text-align:right;color:var(--navy)}.mhw{font-size:11px;font-weight:600;min-width:65px;text-align:right}
+.mha{display:flex;justify-content:space-between;padding-top:10px;margin-top:6px;border-top:1.5px solid var(--blue-bg)}
+.tw{background:#fff;border:1.5px solid var(--border2);border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 8px rgba(31,111,235,.05)}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:700;color:#fff;text-align:left;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.1);background:linear-gradient(135deg,#1B3A6B,#1F6FEB);text-transform:uppercase;letter-spacing:.04em}
+td{font-size:13px;padding:10px 14px;border-bottom:1px solid var(--border2);vertical-align:middle}
+tr:last-child td{border-bottom:none}tbody tr:hover td{background:var(--blue-bg)}
+.sb2{height:6px;border-radius:3px;background:var(--border2);overflow:hidden;width:55px;display:inline-block;vertical-align:middle;margin-left:6px}.sf{height:100%;border-radius:3px}
+.htabs{display:flex;gap:4px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius);padding:4px;margin-bottom:1.25rem;overflow-x:auto}
+.htab{padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--text2);font-weight:600;white-space:nowrap}
+.htab.on{background:linear-gradient(135deg,#1B3A6B,#1F6FEB);color:#fff;box-shadow:0 2px 8px rgba(31,111,235,.3)}
+.hpanel{display:none}.hpanel.on{display:block}
+.al{background:var(--amber-bg);border:1.5px solid var(--amber-br);border-radius:var(--radius);padding:.85rem 1rem;margin-bottom:1.25rem;font-size:13px;line-height:1.5;display:flex;gap:8px;color:var(--amber)}
+.dg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.dc{background:#fff;border:1.5px solid var(--border2);border-radius:var(--radius);padding:.9rem 1rem;box-shadow:0 2px 8px rgba(31,111,235,.05);border-top:3px solid var(--blue)}
+.dn{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px}.dd{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.dot{width:11px;height:11px;border-radius:50%}.dstat{font-size:11px;color:var(--text2)}
+.fr{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.fr select,.fr input{font-size:13px;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--text);outline:none}
+hr.div{border:none;border-top:1.5px solid var(--border2);margin:1.25rem 0}
+@media(max-width:768px){.setup-wrap,.login-wrap{flex-direction:column;border-radius:0}.setup-left,.login-left{padding:2rem;min-height:auto}.g4{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}.dg{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- SETUP PAGE -->
+<div id="pg-setup" class="pg pg-center on">
+  <div class="setup-wrap">
+    <div class="setup-left">
+      <div class="s-logo"><i class="ti ti-chart-line" style="font-size:34px;color:#fff"></i></div>
+      <div class="s-title">CPIS<br>Portal</div>
+      <div class="s-sub">Continuous Performance<br>Intelligence System</div>
+      <div class="s-company">Transsion Tecno Electronics</div>
+    </div>
+    <div class="setup-right">
+      <div class="r-title">Welcome back</div>
+      <div class="r-sub">Load your live data to get started</div>
+      <div class="live-dot"><div class="pulse"></div><span class="live-txt">Live system connected</span></div>
+      <div id="live-area">
+        <button class="load-btn" id="loadBtn" onclick="loadLive()">
+          <i class="ti ti-login" style="font-size:16px"></i>Load live data &amp; continue
+        </button>
+        <div class="msg" id="loadMsg"></div>
+        <div class="demo-lnk">Testing? <span onclick="showDemo()">Use demo mode →</span></div>
+      </div>
+      <div class="demo-panel" id="demoPanel">
+        <div class="demo-row"><span class="demo-role">Employee</span><span class="demo-cred"><code>007650</code> / <code>Muhammad2020@TTE</code></span></div>
+        <div class="demo-row"><span class="demo-role">Manager</span><span class="demo-cred"><code>MGR001</code> / <code>Nadir2025@TTE</code></span></div>
+        <div class="demo-row"><span class="demo-role">HR</span><span class="demo-cred"><code>HR001</code> / <code>HR2020@TTE</code></span></div>
+        <button class="demo-btn" onclick="loadDemo()">Launch demo</button>
+        <div class="back-lnk" onclick="hideDemo()">← Back to live</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="pg-login" class="pg pg-center">
+  <div class="login-wrap">
+    <div class="login-left">
+      <div class="login-left-inner">
+        <div class="ll-logo"><i class="ti ti-chart-line" style="font-size:34px;color:#fff"></i></div>
+        <div class="ll-title">CPIS Portal</div>
+        <div class="ll-sub">Continuous Performance<br>Intelligence System</div>
+      </div>
+    </div>
+    <div class="login-right">
+      <div class="lr-title">Sign in</div>
+      <div class="lr-sub">Enter your Employee ID and password</div>
+      <label class="fl">Employee ID</label>
+      <input class="fi" type="text" id="inId" placeholder="e.g. 007650" onkeydown="if(event.key==='Enter')document.getElementById('inPw').focus()">
+      <label class="fl">Password</label>
+      <div class="pw-wrap">
+        <input class="fi" type="password" id="inPw" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="pw-eye" onclick="togglePw()"><i class="ti ti-eye" id="pwIcon"></i></button>
+      </div>
+      <div class="err-box" id="errBox"></div>
+      <button class="login-btn" onclick="doLogin()">Login &nbsp;<i class="ti ti-arrow-right" style="font-size:14px;vertical-align:middle"></i></button>
+      <div class="hint">Your ID is on your employee card.<br>Password set by HR — contact HR if forgotten.</div>
+      <div><div class="back" onclick="goSetup()">← Back</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="pg-dash" class="dash-pg">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="uinfo">
+        <div class="ava" id="dAva"></div>
+        <div><div class="uname" id="dName"></div><div class="umeta" id="dMeta"></div></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="exportBtn" style="display:none;padding:8px 16px;font-size:12px;font-weight:700;border-radius:8px;border:1.5px solid #1F6FEB;background:#EBF2FF;color:#1F6FEB;cursor:pointer;gap:6px" onclick="exportExcel()"><i class="ti ti-download" style="font-size:14px;margin-right:4px"></i>Export Excel</button>
+        <button class="lo" onclick="doLogout()"><i class="ti ti-logout" style="font-size:14px"></i>Sign out</button>
+      </div>
+    </div>
+    <div id="dContent"></div>
+  </div>
+</div>
+
+<script>
+var PUB='2PACX-1vSLQiMuPQrE7WYClwkLp0YLqvDb0XtnaaqxDTlVvV6ZUY5WDBwGGTHEBJ5kw3tXH2fT8NDxgNlJKvb2';
+var GIDS={'Employee Master':'1106939539','HOD Setup':'619575060','Jul-26':'186783212','Aug-26':'264489843'};
+var MONTHS=[{s:'Jul-26',m:'Jul'},{s:'Aug-26',m:'Aug'},{s:'Sep-26',m:'Sep'},{s:'Oct-26',m:'Oct'},{s:'Nov-26',m:'Nov'},{s:'Dec-26',m:'Dec'},{s:'Jan-27',m:'Jan'},{s:'Feb-27',m:'Feb'},{s:'Mar-27',m:'Mar'},{s:'Apr-27',m:'Apr'},{s:'May-27',m:'May'},{s:'Jun-27',m:'Jun'}];
+var DATA=null,charts=[];
+
+function gw(s){return s>=90?'Superb':s>=80?'Excellent':s>=70?'Good':s>=60?'Average':'Poor';}
+function gc(s){return s>=70?'#1E7D34':s>=60?'#A05C00':'#A01E1E';}
+function gwc(w){return(w==='Superb'||w==='Excellent'||w==='Good')?'bg':w==='Average'?'ba':'br';}
+function stw(s){return s>=70?'On track':s>=60?'Keep going':'Focus required';}
+function stc(s){return s>=70?'bg':s>=60?'ba':'br';}
+function ini(n){return n.split(' ').slice(0,2).map(function(x){return x[0];}).join('');}
+function avg(ms){if(!ms||!ms.length)return 0;return Math.round(ms.reduce(function(a,m){return a+m.score;},0)/ms.length);}
+function bH(v,max,c){return '<div class="brb"><div class="brf" style="width:'+Math.round(v/max*100)+'%;background:'+c+'"></div></div>';}
+function killCharts(){charts.forEach(function(c){try{c.destroy();}catch(e){}});charts=[];}
+function gs(a,mgr){
+  var t=mgr?'Review your team and consult senior management.':'Speak with your manager.';
+  if(a>=70)return{c:'sb-g',i:'ti-circle-check',ic:'#1E7D34',t:'<strong>On track</strong> — your average meets the required threshold. Keep it consistent.'};
+  if(a>=60)return{c:'sb-a',i:'ti-alert-circle',ic:'#A05C00',t:'<strong>Keep going</strong> — you are close. A few strong months will bring you over.'};
+  return{c:'sb-r',i:'ti-alert-triangle',ic:'#A01E1E',t:'<strong>Focus required</strong> — your score needs improvement. '+t};
+}
+
+function parseCSV(txt){
+  if(!txt||!txt.trim())return[];
+  if(txt.indexOf('<!DOCTYPE')>=0)return[];
+  var rows=[];
+  txt.split('\n').forEach(function(line){
+    if(!line.trim())return;
+    var row=[],inQ=false,val='';
+    for(var i=0;i<line.length;i++){
+      var ch=line[i];
+      if(ch==='"'){if(inQ&&line[i+1]==='"'){val+='"';i++;}else{inQ=!inQ;}}
+      else if(ch===','&&!inQ){row.push(val.trim());val='';}
+      else val+=ch;
+    }
+    row.push(val.trim());rows.push(row);
+  });
+  return rows;
+}
+function fetchCSV(sn){
+  var gid=GIDS[sn];if(!gid)return Promise.resolve([]);
+  return fetch('https://docs.google.com/spreadsheets/d/e/'+PUB+'/pub?gid='+gid+'&single=true&output=csv&t='+Date.now())
+    .then(function(r){return r.text();}).then(parseCSV).catch(function(){return[];});
+}
+
+function buildData(eR,hR,mD){
+  var emps=[];
+  eR.slice(1).forEach(function(r){
+    if(!r[0]||r[0]==='Emp ID')return;
+    var st=String(r[11]||'Active').trim().toLowerCase();
+    if(st==='inactive'||st==='resigned'||st==='terminated')return;
+    var name=String(r[1]||''),fn=name.split(' ')[0]||name,yr=new Date().getFullYear();
+    var doj=r[5];if(doj){var d=new Date(doj);if(!isNaN(d))yr=d.getFullYear();}
+    var pw=String(r[8]||'').trim();
+    if(!pw||pw.startsWith('=')||pw==='Password')pw=fn+yr+'@TTE';
+    var isHR=String(r[7]||'').toLowerCase()==='yes';
+    emps.push({id:String(r[0]).trim(),name:name,dept:String(r[2]||''),grade:String(r[3]||''),desig:String(r[4]||''),isHR:isHR,role:isHR?'hr':'employee',password:pw,months:[]});
+  });
+  var hMap={},hFull={};
+  hR.slice(1).forEach(function(r){
+    if(!r[0]||!r[2])return;
+    var id=String(r[0]).trim();
+    if(id.charAt(0)==='>'||id.charCodeAt(0)===9658)return;
+    if(!hMap[id])hMap[id]=[];
+    hMap[id].push(String(r[2]).trim());
+    if(String(r[4]||'').toLowerCase()==='yes')hFull[id]=true;
+  });
+  emps.forEach(function(e){
+    if(e.isHR)return;
+    if(hFull[e.id])e.role='hr';
+    else if(hMap[e.id]){e.role='manager';e.depts=hMap[e.id];}
+  });
+  Object.keys(hMap).forEach(function(id){
+    if(emps.find(function(e){return e.id===id;}))return;
+    emps.push({id:id,name:id,dept:hMap[id][0]||'',grade:'',desig:'Department Head',isHR:false,role:hFull[id]?'hr':'manager',depts:hMap[id],password:id+'@TTE',months:[]});
+  });
+  mD.forEach(function(item){
+    item.rows.slice(1).forEach(function(r){
+      if(!r[0])return;
+      var emp=emps.find(function(e){return e.id===String(r[0]).trim();});
+      if(!emp)return;
+      var warn=String(r[7]||'').toLowerCase()==='yes';
+      var kpi=warn?0:Number(r[6])||0;
+      var ten=warn?0:Number(r[8])||0;
+      // Skip only if completely empty row (no KPI, no tenure, no warning)
+      var rawKpi=Number(r[6])||0;
+      var rawTen=Number(r[8])||0;
+      if(!rawKpi&&!rawTen&&!warn)return;
+      emp.months.push({m:item.m,kpi:kpi,ten:ten,con:0,warn:warn,score:0});
+    });
+  });
+  emps.forEach(function(emp){
+    emp.months.forEach(function(mo,idx){
+      if(idx===0){mo.con=0;return;}
+      // Rolling average of all previous months KPI (max 6)
+      var lb=emp.months.slice(Math.max(0,idx-6),idx);
+      if(!lb.length){mo.con=0;return;}
+      // Average KPI of previous months (warning months = 0 KPI)
+      var avgKpi=lb.reduce(function(a,m){return a+(m.warn?0:m.kpi);},0)/lb.length;
+      // Map avg KPI to consistency score
+      var con=0;
+      if(avgKpi>=72)con=10;
+      else if(avgKpi>=60)con=8;
+      else if(avgKpi>=48)con=6;
+      else if(avgKpi>=32)con=3;
+      else con=0;
+      mo.con=con;
+    });
+  });
+  // Recalculate final score after consistency is set
+  emps.forEach(function(emp){
+    emp.months.forEach(function(mo){
+      if(mo.warn){mo.score=0;return;}
+      mo.score = mo.kpi + mo.ten + mo.con; // KPI(80) + Tenure(10) + Consistency(10) = max 100
+    });
+  });
+
+  return emps;
+}
+
+function loadLive(){
+  var btn=document.getElementById('loadBtn'),msg=document.getElementById('loadMsg');
+  btn.disabled=true;btn.innerHTML='<i class="ti ti-loader" style="font-size:16px"></i>Loading...';
+  msg.textContent='Connecting...';
+  var eR=[],hR=[],mD=[];
+  fetchCSV('Employee Master').then(function(r){eR=r;return fetchCSV('HOD Setup');})
+  .then(function(r){
+    hR=r;
+    var p=Promise.resolve();
+    MONTHS.forEach(function(item){
+      if(!GIDS[item.s])return;
+      p=p.then(function(){return fetchCSV(item.s).then(function(rows){if(rows&&rows.length>1)mD.push({m:item.m,rows:rows});});});
+    });
+    return p;
+  })
+  .then(function(){
+    DATA={employees:buildData(eR,hR,mD)};
+    msg.textContent=DATA.employees.length+' employees loaded!';
+    // Check if user was already logged in
+    try{
+      var savedId=sessionStorage.getItem('cpis_uid');
+      if(savedId){
+        var savedUser=DATA.employees.find(function(e){return e.id===savedId;});
+        if(savedUser){setTimeout(function(){showDash(savedUser);},800);return;}
+      }
+    }catch(e){}
+    setTimeout(goLogin,800);
+  })
+  .catch(function(e){
+    btn.disabled=false;btn.innerHTML='<i class="ti ti-login" style="font-size:16px"></i>Load live data & continue';
+    msg.style.color='var(--red)';msg.textContent='Error: '+e.message;
+  });
+}
+
+var DEMO={employees:[
+  {id:'007650',name:'Muhammad Rameez',grade:'N-3',dept:'HR',desig:'Sr. C&B Executive',role:'hr',isHR:true,password:'Muhammad2020@TTE',months:[{m:'Jul',kpi:64,ten:8,con:0,warn:false,score:72},{m:'Aug',kpi:80,ten:8,con:7,warn:false,score:95},{m:'Sep',kpi:64,ten:8,con:8,warn:false,score:80}]},
+  {id:'007200',name:'Sara Ahmed',grade:'N-3',dept:'HR',desig:'HR Executive',role:'employee',isHR:false,password:'Sara2021@TTE',months:[{m:'Jul',kpi:64,ten:6,con:0,warn:false,score:70},{m:'Aug',kpi:48,ten:6,con:5,warn:false,score:59},{m:'Sep',kpi:64,ten:6,con:6,warn:false,score:76}]},
+  {id:'007100',name:'Kamran Malik',grade:'N-2',dept:'HR',desig:'HR Officer',role:'employee',isHR:false,password:'Kamran2022@TTE',months:[{m:'Jul',kpi:48,ten:4,con:0,warn:false,score:52},{m:'Aug',kpi:0,ten:0,con:0,warn:true,score:0},{m:'Sep',kpi:48,ten:4,con:3,warn:false,score:55}]},
+  {id:'006500',name:'Hassan Raza',grade:'M-4',dept:'Engineering',desig:'Deputy Manager',role:'employee',isHR:false,password:'Hassan2019@TTE',months:[{m:'Jul',kpi:80,ten:10,con:0,warn:false,score:90},{m:'Aug',kpi:80,ten:10,con:10,warn:false,score:100},{m:'Sep',kpi:80,ten:10,con:10,warn:false,score:100}]},
+  {id:'MGR001',name:'Nadir Khan',grade:'M-5',dept:'HR',desig:'HR Manager',role:'manager',isHR:false,depts:['HR'],password:'Nadir2025@TTE',months:[{m:'Jul',kpi:64,ten:10,con:0,warn:false,score:74},{m:'Aug',kpi:80,ten:10,con:8,warn:false,score:98},{m:'Sep',kpi:64,ten:10,con:8,warn:false,score:82}]},
+  {id:'HR001',name:'HR Admin',grade:'N-3',dept:'HR',desig:'HR Administrator',role:'hr',isHR:true,password:'HR2020@TTE',months:[]}
+]};
+
+function showDemo(){document.getElementById('demoPanel').style.display='block';document.getElementById('live-area').style.display='none';}
+function hideDemo(){document.getElementById('demoPanel').style.display='none';document.getElementById('live-area').style.display='block';}
+function loadDemo(){DATA=DEMO;goLogin();}
+
+function goSetup(){
+  document.getElementById('inId').value='';document.getElementById('inPw').value='';
+  document.getElementById('errBox').style.display='none';
+  document.getElementById('pg-setup').classList.add('on');
+  document.getElementById('pg-login').classList.remove('on');
+  document.getElementById('pg-dash').style.display='none';
+}
+function goLogin(){
+  document.getElementById('pg-setup').classList.remove('on');
+  document.getElementById('pg-login').classList.add('on');
+  document.getElementById('pg-dash').style.display='none';
+}
+function togglePw(){var i=document.getElementById('inPw'),ic=document.getElementById('pwIcon');i.type=i.type==='password'?'text':'password';ic.className=i.type==='password'?'ti ti-eye':'ti ti-eye-off';}
+
+function doLogin(){
+  var id=document.getElementById('inId').value.trim(),pw=document.getElementById('inPw').value.trim(),eb=document.getElementById('errBox');
+  eb.style.display='none';
+  if(!DATA){eb.textContent='Please load data first.';eb.style.display='block';return;}
+  if(!id||!pw){eb.textContent='Please enter your ID and password.';eb.style.display='block';return;}
+  var u=DATA.employees.find(function(e){return e.id===id;});
+  if(!u){eb.textContent='ID not found. Contact HR.';eb.style.display='block';return;}
+  if(u.password&&u.password!==pw){eb.textContent='Incorrect password. Please try again.';eb.style.display='block';return;}
+  // Save session
+  try{sessionStorage.setItem('cpis_uid', u.id);}catch(e){}
+  showDash(u);
+}
+function showDash(u){
+  document.getElementById('pg-setup').classList.remove('on');
+  document.getElementById('pg-login').classList.remove('on');
+  document.getElementById('pg-dash').style.display='block';
+  var rc=u.role==='hr'?'ava-h':u.role==='manager'?'ava-m':'ava-e';
+  var rl=u.role==='hr'?'HR':u.role==='manager'?'Manager':'Employee';
+  var rt=u.role==='hr'?'rtag-h':u.role==='manager'?'rtag-m':'rtag-e';
+  document.getElementById('dAva').className='ava '+rc;
+  document.getElementById('dAva').textContent=ini(u.name);
+  document.getElementById('dName').innerHTML=u.name+'<span class="rtag '+rt+'">'+rl+'</span>';
+  document.getElementById('dMeta').textContent=(u.desig||'')+' · '+(u.grade||'')+' · '+(u.dept||'');
+  if(u.role==='manager')renderMgr(u);
+  else if(u.role==='hr')renderHR(u);
+  else renderEmp(u);
+}
+
+function doLogout(){
+  try{sessionStorage.removeItem('cpis_uid');}catch(e){}
+  killCharts();
+  document.getElementById('inId').value='';document.getElementById('inPw').value='';
+  document.getElementById('dContent').innerHTML='';
+  document.getElementById('pg-dash').style.display='none';
+  document.getElementById('pg-setup').classList.add('on');
+  var eb=document.getElementById('exportBtn');if(eb)eb.style.display='none';
+}
+
+function empSec(ms,mgr){
+  var last=ms[ms.length-1],a=avg(ms),st=gs(a,mgr),h='';
+  h+='<div class="sb '+st.c+'"><i class="ti '+st.i+'" style="font-size:19px;color:'+st.ic+';flex-shrink:0;margin-top:1px"></i><div>'+st.t+'</div></div>';
+  h+='<div class="g4"><div class="kc"><div class="kl">This month</div><div class="kv">'+last.score+'</div><div class="ks">out of 100</div></div>';
+  h+='<div class="kc"><div class="kl">'+ms.length+'-month avg</div><div class="kv" style="color:'+gc(a)+'">'+a+'</div><div class="ks">'+gw(a)+'</div></div>';
+  h+='<div class="kc"><div class="kl">Tenure score</div><div class="kv">'+last.ten+'<span style="font-size:14px;color:var(--text3)">/10</span></div><div class="ks">in current grade</div></div>';
+  h+='<div class="kc"><div class="kl">Consistency</div><div class="kv">'+last.con+'<span style="font-size:14px;color:var(--text3)">/10</span></div><div class="ks">last 6 months</div></div></div>';
+  h+='<div class="g2"><div class="bx"><div class="st">This month — breakdown</div>';
+  h+='<div class="br-row"><div class="brl"><i class="ti ti-target"></i>KPI score</div><div class="brr"><span class="brs" style="color:'+gc(last.kpi/80*100)+'">'+last.kpi+'<span style="color:var(--text3);font-size:11px">/80</span></span>'+bH(last.kpi,80,'#1F6FEB')+'</div></div>';
+  h+='<div class="br-row"><div class="brl"><i class="ti ti-clock"></i>Tenure</div><div class="brr"><span class="brs">'+last.ten+'<span style="color:var(--text3);font-size:11px">/10</span></span>'+bH(last.ten,10,'#1E7D34')+'</div></div>';
+  h+='<div class="br-row"><div class="brl"><i class="ti ti-trending-up"></i>Consistency</div><div class="brr"><span class="brs">'+last.con+'<span style="color:var(--text3);font-size:11px">/10</span></span>'+bH(last.con,10,'#1E7D34')+'</div></div>';
+  h+='<div class="br-row"><div class="brl"><i class="ti ti-shield-check"></i>Warning</div><div class="brr"><span class="brs" style="color:'+(last.warn?'#A01E1E':'#1E7D34')+'">'+(last.warn?'Yes':'No')+'</span></div></div>';
+  if(last.warn)h+='<div style="font-size:12px;color:var(--red);padding:7px 10px;background:var(--red-bg);border-radius:7px;margin-top:8px;border:1px solid var(--red-br)">Warning received — total score this month is 0</div>';
+  h+='<div class="brt"><span style="font-size:13px;font-weight:600">Total this month</span><span style="font-size:17px;font-weight:700;color:'+gc(last.score)+'">'+last.score+' / 100</span></div></div>';
+  h+='<div class="bx"><div class="st">Monthly history</div>';
+  ms.forEach(function(m){h+='<div class="mhr"><span class="mhm">'+m.m+'</span><div class="mhb"><div class="mhf" style="width:'+m.score+'%;background:'+gc(m.score)+'"></div></div><span class="mhs">'+m.score+'</span><span class="mhw" style="color:'+gc(m.score)+'">'+gw(m.score)+'</span></div>';});
+  h+='<div class="mha"><span style="font-size:12px;color:var(--text2);font-weight:500">'+ms.length+'-month average</span><span style="font-size:15px;font-weight:700;color:'+gc(a)+'">'+a+' / 100</span></div></div></div>';
+  return h;
+}
+
+function renderEmp(u){
+  if(!u.months||!u.months.length){document.getElementById('dContent').innerHTML='<div class="bx"><div class="bxp">No data yet. HR will upload monthly scores shortly.</div></div>';return;}
+  var h=empSec(u.months,false);
+  h+='<div class="bx"><div class="bxt">How to improve</div><div class="bxp">KPI carries 80 of your 100 points — focus on monthly targets. Consistent performance builds your consistency score. Any warning month resets total to zero.</div></div>';
+  document.getElementById('dContent').innerHTML=h;
+}
+
+function renderMgr(u){
+  var h='';
+  if(u.months&&u.months.length){
+    h+='<div class="bx"><div class="st" style="margin-bottom:12px">Your performance</div>'+empSec(u.months,true)+'</div><hr class="div">';
+  }
+  var myDepts=u.depts&&u.depts.length?u.depts:[u.dept];
+  var isAll=myDepts.indexOf('ALL')>=0;
+  var team=DATA.employees.filter(function(e){return(isAll||myDepts.some(function(d){return d===e.dept;}))&&e.role==='employee'&&e.months&&e.months.length&&e.id!==u.id;});
+  if(!team.length){h+='<div class="bx"><div class="bxp">No team data available yet.</div></div>';document.getElementById('dContent').innerHTML=h;return;}
+  var td=team.map(function(e){var a=avg(e.months);return{id:e.id,name:e.name,grade:e.grade,dept:e.dept,avg:a,word:gw(a)};});
+  var da=Math.round(td.reduce(function(a,e){return a+e.avg;},0)/td.length);
+  var onT=td.filter(function(e){return e.avg>=70;}).length;
+  var risky=td.filter(function(e){return e.avg<60;});
+  var multi=myDepts.length>1||isAll;
+  h+='<div class="g3"><div class="kc"><div class="kl">Team size</div><div class="kv">'+team.length+'</div><div class="ks">'+(isAll?'All departments':myDepts.join(' + '))+'</div></div>';
+  h+='<div class="kc"><div class="kl">Dept average</div><div class="kv" style="color:'+gc(da)+'">'+da+'</div><div class="ks">'+gw(da)+'</div></div>';
+  h+='<div class="kc"><div class="kl">On track</div><div class="kv" style="color:#1E7D34">'+onT+'</div><div class="ks">of '+team.length+'</div></div></div>';
+  if(risky.length){h+='<div class="al"><i class="ti ti-alert-triangle" style="font-size:18px;flex-shrink:0;margin-top:1px"></i><div><strong>'+risky.map(function(e){return e.name;}).join(', ')+'</strong> scoring below average. Consider a performance conversation.</div></div>';}
+  h+='<div class="st">Team overview</div><div class="tw"><table><thead><tr><th>Name</th><th>Grade</th>'+(multi?'<th>Dept</th>':'')+'<th>Performance</th><th>Average</th><th>Status</th></tr></thead><tbody>';
+  td.sort(function(a,b){return b.avg-a.avg;}).forEach(function(e){
+    h+='<tr><td><strong>'+e.name+'</strong></td><td><span class="bdg bp">'+e.grade+'</span></td>';
+    if(multi)h+='<td style="color:var(--text2)">'+e.dept+'</td>';
+    h+='<td><span class="bdg '+gwc(e.word)+'">'+e.word+'</span></td><td>'+e.avg+'<span class="sb2"><span class="sf" style="width:'+e.avg+'%;background:'+gc(e.avg)+'"></span></span></td><td><span class="bdg '+stc(e.avg)+'">'+stw(e.avg)+'</span></td></tr>';
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('dContent').innerHTML=h;
+}
+
+function renderHR(u){
+  var eb = document.getElementById('exportBtn');
+  if(eb) eb.style.display='inline-flex';
+  var emps=DATA.employees.filter(function(e){return e.months&&e.months.length;}).map(function(e){var a=avg(e.months);return{id:e.id,name:e.name,grade:e.grade,dept:e.dept,avg:a,word:gw(a),months:e.months};});
+  var tot=emps.length,onT=emps.filter(function(e){return e.avg>=70;}).length;
+  var kg=emps.filter(function(e){return e.avg>=60&&e.avg<70;}).length;
+  var fr=emps.filter(function(e){return e.avg<60;}).length;
+  var ga=tot?Math.round(emps.reduce(function(a,e){return a+e.avg;},0)/tot):0;
+  var wc=emps.filter(function(e){return e.months[e.months.length-1]&&e.months[e.months.length-1].warn;}).length;
+  var ml=emps.length&&emps[0].months?emps[0].months.map(function(m){return m.m;}):[],mv=[];
+  ml.forEach(function(_,i){mv.push(Math.round(emps.reduce(function(a,e){return a+(e.months[i]?e.months[i].score:0);},0)/emps.length));});
+  var depts=[...new Set(emps.map(function(e){return e.dept;}))].sort();
+  document.getElementById('dContent').innerHTML=
+    '<div class="htabs"><button class="htab on" onclick="ht(\'ov\',this)">Overview</button><button class="htab" onclick="ht(\'em\',this)">All employees</button><button class="htab" onclick="ht(\'ot\',this)">On track</button><button class="htab" onclick="ht(\'dp\',this)">Departments</button></div>'+
+    '<div class="hpanel on" id="hp-ov">'+
+    '<div class="g4"><div class="kc"><div class="kl">Total staff</div><div class="kv">'+tot+'</div><div class="ks">Active</div></div>'+
+    '<div class="kc"><div class="kl">On track</div><div class="kv" style="color:#1E7D34">'+onT+'</div><div class="ks">score 70+</div></div>'+
+    '<div class="kc"><div class="kl">Keep going</div><div class="kv" style="color:#A05C00">'+kg+'</div><div class="ks">score 60-69</div></div>'+
+    '<div class="kc"><div class="kl">Focus required</div><div class="kv" style="color:#A01E1E">'+fr+'</div><div class="ks">below 60</div></div></div>'+
+    '<div class="g2"><div class="kc"><div class="kl">Group average</div><div class="kv" style="color:'+gc(ga)+'">'+ga+'</div><div class="ks">'+gw(ga)+'</div></div>'+
+    '<div class="kc"><div class="kl">Warnings this month</div><div class="kv" style="color:#A01E1E">'+wc+'</div><div class="ks">score set to 0</div></div></div>'+
+    '<div class="bx"><div class="st">Monthly group average</div><div style="position:relative;height:190px"><canvas id="tc"></canvas></div></div>'+
+    '<div class="bx"><div class="st">Score distribution</div><div style="position:relative;height:150px"><canvas id="dc"></canvas></div></div></div>'+
+    '<div class="hpanel" id="hp-em">'+
+    '<div class="fr"><select id="dfil" onchange="fEmps()"><option value="">All departments</option>'+depts.map(function(d){return'<option>'+d+'</option>';}).join('')+'</select>'+
+    '<select id="sfil" onchange="fEmps()"><option value="">All statuses</option><option>On track</option><option>Keep going</option><option>Focus required</option></select>'+
+    '<input id="nfil" placeholder="Search name..." oninput="fEmps()" style="min-width:160px"></div>'+
+    '<div class="tw"><table><thead><tr><th>Name</th><th>Grade</th><th>Department</th><th>Performance</th><th>Score</th><th>Status</th></tr></thead><tbody id="eTbl"></tbody></table></div></div>'+
+    '<div class="hpanel" id="hp-ot"><div class="st" style="margin-bottom:12px">On track - '+onT+' employees scoring 70+</div>'+
+    '<div class="tw"><table><thead><tr><th>Name</th><th>Grade</th><th>Department</th><th>Performance</th><th>Average</th></tr></thead><tbody>'+
+    emps.filter(function(e){return e.avg>=70;}).sort(function(a,b){return b.avg-a.avg;}).map(function(e){return'<tr><td><strong>'+e.name+'</strong></td><td><span class="bdg bp">'+e.grade+'</span></td><td style="color:var(--text2)">'+e.dept+'</td><td><span class="bdg '+gwc(e.word)+'">'+e.word+'</span></td><td><strong style="color:#1E7D34">'+e.avg+'</strong><span class="sb2"><span class="sf" style="width:'+e.avg+'%;background:#1E7D34"></span></span></td></tr>';}).join('')+
+    '</tbody></table></div></div>'+
+    '<div class="hpanel" id="hp-dp"><div class="dg" id="dg"></div></div>';
+  fillEmps(emps);fillDepts(emps);
+  setTimeout(function(){
+    var tc=new Chart(document.getElementById('tc'),{type:'line',data:{labels:ml,datasets:[{data:mv,borderColor:'#1F6FEB',borderWidth:2.5,pointBackgroundColor:'#1F6FEB',pointRadius:4,tension:.35,fill:true,backgroundColor:'rgba(31,111,235,0.07)'},{data:ml.map(function(){return 70;}),borderColor:'#CBD5E1',borderWidth:1.5,borderDash:[5,4],pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:40,max:100,ticks:{color:'#8B8BAA',font:{size:11}},grid:{color:'#E2E8F0'}},x:{ticks:{color:'#8B8BAA',font:{size:11}},grid:{display:false}}}}});
+    var dc=new Chart(document.getElementById('dc'),{type:'bar',data:{labels:['On track','Keep going','Focus required'],datasets:[{data:[onT,kg,fr],backgroundColor:['#1E7D34','#A05C00','#A01E1E'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{stepSize:1,color:'#8B8BAA',font:{size:11}},grid:{color:'#E2E8F0'}},x:{ticks:{color:'#8B8BAA',font:{size:11}},grid:{display:false}}}}});
+    charts.push(tc,dc);
+  },100);
+}
+function fillEmps(data){document.getElementById('eTbl').innerHTML=data.map(function(e){return'<tr><td><strong>'+e.name+'</strong></td><td><span class="bdg bp">'+e.grade+'</span></td><td style="color:var(--text2)">'+e.dept+'</td><td><span class="bdg '+gwc(e.word)+'">'+e.word+'</span></td><td>'+e.avg+'<span class="sb2"><span class="sf" style="width:'+e.avg+'%;background:'+gc(e.avg)+'"></span></span></td><td><span class="bdg '+stc(e.avg)+'">'+stw(e.avg)+'</span></td></tr>';}).join('');}
+function fEmps(){
+  var d=document.getElementById('dfil').value,s=document.getElementById('sfil').value,q=document.getElementById('nfil').value.toLowerCase();
+  var f=DATA.employees.filter(function(e){return e.months&&e.months.length;}).map(function(e){var a=avg(e.months);return{id:e.id,name:e.name,grade:e.grade,dept:e.dept,avg:a,word:gw(a)};});
+  if(d)f=f.filter(function(e){return e.dept===d;});
+  if(s)f=f.filter(function(e){return stw(e.avg)===s;});
+  if(q)f=f.filter(function(e){return e.name.toLowerCase().indexOf(q)>=0;});
+  fillEmps(f);
+}
+function fillDepts(emps){
+  var dp={};
+  emps.forEach(function(e){if(!dp[e.dept])dp[e.dept]={list:[],tot:0};dp[e.dept].list.push(e);dp[e.dept].tot+=e.avg;});
+  document.getElementById('dg').innerHTML=Object.keys(dp).sort().map(function(k){var d=dp[k],a=Math.round(d.tot/d.list.length),onT=d.list.filter(function(e){return e.avg>=70;}).length;var dots=d.list.map(function(e){return'<div class="dot" style="background:'+gc(e.avg)+'" title="'+e.name+': '+e.avg+'"></div>';}).join('');return'<div class="dc"><div class="dn">'+k+'</div><div class="dd">'+dots+'</div><div class="dstat">'+d.list.length+' staff &nbsp;·&nbsp; avg <strong style="color:'+gc(a)+'">'+a+'</strong> &nbsp;·&nbsp; <span style="color:#1E7D34;font-weight:600">'+onT+' on track</span></div></div>';}).join('');}
+// Auto-restore session on page load
+window.addEventListener('load', function(){
+  try{
+    var savedId = sessionStorage.getItem('cpis_uid');
+    if(savedId && DATA){
+      var u = DATA.employees.find(function(e){return e.id===savedId;});
+      if(u) showDash(u);
+    } else if(savedId){
+      // Data not loaded yet - load it automatically
+      loadLive();
+    }
+  }catch(e){}
+});
+
+function ht(id,btn){document.querySelectorAll('.htab').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');document.querySelectorAll('.hpanel').forEach(function(p){p.classList.remove('on');});document.getElementById('hp-'+id).classList.add('on');}
+
+function exportExcel(){
+  if(!DATA||!DATA.employees){alert('No data loaded.');return;}
+  
+  var rows = [];
+  
+  // Get all months
+  var allMonths = [];
+  DATA.employees.forEach(function(e){
+    if(e.months) e.months.forEach(function(m){
+      if(allMonths.indexOf(m.m)<0) allMonths.push(m.m);
+    });
+  });
+
+  // Simple headers
+  var headers = ['Emp ID','Name','Department','Grade'];
+  allMonths.forEach(function(m){ headers.push(m+' Score'); });
+  headers.push('Average Score','Performance','Status');
+  rows.push(headers);
+  
+  // Data rows
+  DATA.employees.filter(function(e){return e.months&&e.months.length;}).forEach(function(e){
+    var a = avg(e.months);
+    var row = [e.id, e.name, e.dept, e.grade];
+    allMonths.forEach(function(m){
+      var mo = e.months.find(function(x){return x.m===m;});
+      row.push(mo ? mo.score : '');
+    });
+    row.push(a, gw(a), stw(a));
+    rows.push(row);
+  });
+  
+  // Convert to CSV
+  var csv = rows.map(function(row){
+    return row.map(function(cell){
+      var s = String(cell===null||cell===undefined?'':cell);
+      if(s.indexOf(',')>=0||s.indexOf('"')>=0||s.indexOf('\n')>=0){
+        s = '"'+s.replace(/"/g,'""')+'"';
+      }
+      return s;
+    }).join(',');
+  }).join('\n');
+  
+  // Add BOM for Excel UTF-8
+  var BOM = '\uFEFF';
+  var blob = new Blob([BOM+csv], {type:'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'CPIS_Performance_Report_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
